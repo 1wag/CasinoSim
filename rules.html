@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino Rules, Probabilities, and Technical Details</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+    }
+
+    h2 {
+      color: #28a745;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    code {
+      background-color: #f8f9fa;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Casino Games: Rules, Probabilities, and Technical Details</h1>
+
+  <h2>1. Coinflip</h2>
+  <p>
+    Using a <code>for loop</code>, this will generate either a 0 or a 1 value, further incrementing:
+    <br>
+    <strong>0:</strong> heads++;
+    <br>
+    <strong>1:</strong> tails++;
+    <br>
+    Odds are programmed exactly 50/50, giving a fair distribution of values.
+  </p>
+
+  <h2>2. Blackjack</h2>
+  <p id="blackjack-status">Coming soon...</p>
+
+  <h2>3. Roulette Payouts</h2>
+  <ul>
+    <li>Betting on an exact number pays out 35:1 (straight-up)</li>
+    <li>Betting on either red or black pays out 2:1</li>
+    <li>Betting on either odd or even pays out 2:1</li>
+    <li>Betting on 1-18 or 19-36 pays out 2:1</li>
+    <li>Betting on 1st/2nd/3rd twelve pays out 3:1</li>
+  </ul>
+
+  <h2>4. Dice Functionality and Payouts</h2>
+  <p>
+    Same as coinflip, generates 1-6 using a <code>for loop</code>, further incrementing:
+    <br>
+    1: diceOnes++;
+    <br>
+    2: diceTwos++;
+    <br>
+    3: diceThrees++;
+    <br>
+    4: diceFours++;
+    <br>
+    5: diceFives++;
+    <br>
+    6: diceSixes++;
+  </p>
+
+  <h2>5. Slot Machine Functionality and Payouts</h2>
+  <p>
+    Generates 3 values 1 through 9, each representing one slot in the machine:
+    <br>
+    - If one 7 value appears, the payout is 1.5x of the initial bet
+    <br>
+    - If two 7 values appear, the payout is 8x of the initial bet
+    <br>
+    - If all 3 slots have the value 7, this occurs as a jackpot and pays out 50x
+    <br>
+    - If 2 same values appear, the payout is 3x
+    <br>
+    - If all of the values are the same, the payout is 50x
+  </p>
+
+</body>
+</html>
