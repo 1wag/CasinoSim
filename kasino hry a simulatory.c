@@ -436,7 +436,6 @@ printf("Vitej v aplikaci Blackjack. Projekt vytvoril Tobiswaggy.\n", 1);
 			}
 
 // jsem linej hajzl, nechtelo se mi na tohle delat podprogram
-// source: chatgpt ↓
 
 if ((redOrBlack == 'r' && redOrBlack == 'R') && 
         (rouletteActual == 1 || rouletteActual == 3 || rouletteActual == 5 || 
