@@ -1,7 +1,4 @@
-#include <iostream>
 
-extern "C"
-{
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <stdbool.h>
@@ -9,7 +6,6 @@ extern "C"
 	#include <math.h>
 	#include <string.h>
 	#include <windows.h>
-}
 
 void generateNumber(){
 	static int initialized = 0;
