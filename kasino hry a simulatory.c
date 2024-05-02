@@ -1,12 +1,13 @@
+// https://github.com/Tobiswaggy/CasinoSim/blob/main/kasino%20hry%20a%20simulatory.c
+// nektere casti kodu jsou napsany v anglictine protoze je pro me lepe citelna
 
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include <stdbool.h>
 	#include <time.h>
-	#include <math.h>
-	#include <string.h>
-	#include <windows.h>
+    #include <unistd.h>
 
+
+//zdroj: StackOverflow
 void generateNumber(){
 	static int initialized = 0;
 		if (!initialized){
@@ -15,16 +16,25 @@ void generateNumber(){
 	}
 }
 
+/*
+int checkBalance(int balance, int slotBet){
+	if(slotBet > balance){
+		
+		printf("\n");
+		printf("\tNedostatek financi.\n");
+		return 0;
+		
+	}else{
+		
+		printf("\n");
+		printf("\tVas zustatek je dostatecny. Na ucte mate %d dolaru.\n", balance);
+		return 1;
+		
+	}
+}
+*/
 int returnCoinflip(){
 	return rand() % 2;
-}
-
-int returnRoulette(){
-	return rand() % 36 + 1;
-}
-
-int returnBlackjack(){
-	return rand() % 10 + 1;
 }
 
 int returnDice(){
@@ -35,66 +45,45 @@ int returnSlot(){
 	return rand() % 9 + 1;
 }
 
+int returnScratch(){
+	return rand() % 5 + 1;
+}
+/*
+int returnBlackjack(){
+	return rand() % 10 + 2;
+}
+*/
+int pocetGolu(){
+	return rand() % 8 + 2;
+}
+
+int tymyGoly(){
+	return rand() % 100 + 1;
+}
+
 int main(){
 	
-	// casino variables
+		char rozhodnutiMince;
 	
-	int balance = 1000;
+	float balance = 1000;
 	
-	// coinflip variables
 	
-		unsigned long long i;	
+		unsigned long long i; // hlavni ridici promenna	
 		unsigned long long random;
 	
 		unsigned long long heads = 0; //panna
 		unsigned long long tails = 0; //orel
 		
-		int decisionCount;
-		char decisionShow;
+		int decisionCount; // kolikrat bude mince hozena
+		char decisionShow; // vypisovat jednotlive? (Y/N)
 		
-	// blackjack variables
-	
-		int playerHand = 0;
-		int dealerHand = 0;
-	
-		int playerCard;
-		int dealerCard;
+			int diceRoll; // vygenerovana kostka
+			int diceGuess; 
 			
-		int playerBalance = 1000;
-		int playerBet;
-
-    	int standHit; // stand 0, hit 1
-    	int dobleSplit; // double 0, split 1
-		
-	// roulette variables
-	
-		//economy
-			int rouletteBet;
-			int rouletteWin;
-			int step;
-
-			int rouletteActual;
+			int diceSimulator; // porovnavani ve for cyklu
+			char diceDecision; // Y/N
 			
-		//bets
-			int rouletteGuess;
-			char redOrBlack;
-			char oddOrEven;
-			int numThroughNum;
-			int pairTwelve;
-			int doubleZero;
-						
-		//dowhile
-			int rouletteMenu;
-			int skip;
-			
-	// dice variables
-		
-			int diceRoll;
-			int diceGuess;
-			
-			int diceSimulator;
-			char diceDecision;
-			
+			// jednotlive pocty vygenerovanych kostek, inkrementovany...
 			unsigned long long diceOnes = 0;
 			unsigned long long diceTwos = 0;
 			unsigned long long diceThrees = 0;
@@ -103,47 +92,148 @@ int main(){
 			unsigned long long diceSixes = 0;
 			
 			int diceMenu;
-			
-	// slot machine variables
 	
-			int slotOne;
-			int slotTwo;
-			int slotThree;
-			
-		//economy
+			int slotOne; // policko automatu cislo 1
+			int slotTwo; // policko automatu cislo 2
+			int slotThree; // policko automatu cislo 3
 		
-			int slotBet;
-			int slotWin;
+			int slotBet; // sazka na automatu
+			int slotWin; // vyhra na automatu pricitana k promenne int balance
 			
-			int slotMenu;
+			int animace[16] = {9, 5, 3, 2, 4, 8, 9, 1, 3, 6, 7, 4, 9, 5, 2, 1};
+			int k; // rizeni for cyklu pro animaci
+			int l; // rizeni for cyklu pro animaci
 			
-	// menu variables
-			int decisionMenu;
-	
-	printf("\n");
-	
-	printf("\tVersion 1.02 | Last updated 3/2/2024 | Project by Tobiswaggy\n");
-	printf("\tThis program is currently in beta. Many features still do not work as intended...\n");
-	
-	printf("\n");
-	
-	printf("\tCasino games & math simulators.\n"); 
-	printf("\t1. Coinflip simulator\n");
-	printf("\t2. Blackjack\n");
-	printf("\t3. Roulette table\n");
-	printf("\t4. Dice\n");
-	printf("\t5. Slot machine\n");
-	printf("\t6. Rules and probability (english)\n");
-	printf("\t7. Pravidla a pravdepodobnost (cesky)\n");
-	printf("\t8. Check balance\n");
-	printf("\t9. Settings\n");
-	printf("\t10. Credits\n");
-	printf("\t11. Exit the program\n");
-	
+			int slotMenu; // re-roll herniho automatu
+			
+			int decisionMenu; // hlavni do-while a switch-case
+			
+			// mezivypocty pro procentualni pomer
+			float vypocet1;
+			float vypocet2;
+			float vypocet3;
+			float vypocet4;
+			float vypocet5;
+			float vypocet6;
+
+			int losyMenu; //do-while a switch-case
+			int losGenerator; //vygenerovane policko
+			int policko1; //zobrazene policko 1
+			int policko2; // zobrazene policko 2
+			int policko3; // zobrazene policko 3
+			
+			int sportMenu; // menu pro sazeni na sport
+			int prvniGolyT1 = 0; // goly tym 1
+			int prvniGolyT2 = 0; // goly tym 2
+			int druhyGolyT1 = 0;
+			int druhyGolyT2 = 0;
+			int tretiGolyT1 = 0;
+			int tretiGolyT2 = 0;
+			int presnyPocetGolu1;
+			int presnyPocetGolu2;
+			int presnyPocetGolu3;
+			float sazkaGoly1;
+			float sazkaGoly2;
+			float sazkaGoly3;
+			float vyhraGoly1;
+			float vyhraGoly2;
+			float vyhraGoly3;
+			float sportSazka1; // kolik vsadil uzivatel
+			float sportSazka2;
+			float sportSazka3;
+			float sportVyhra1; // kolik vyhral uzivatel
+			float sportVyhra2;
+			float sportVyhra3;
+			int hideFirst = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int hideSecond = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int hideThird = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int vysledekPrvni; // tip uzivatele na zapas 1
+			int vysledekDruhy; // tip uzivatele na zapas 2
+			int vysledekTreti; // tip uzivatele na zapas 3
+			int goalsInMatch; // kolik golu padne v zapase
+			int s; // ridici promena cyklu
+			int mezivypocetGoly;
+			int mezivypocetGoly1;
+			int mezivypocetGoly2;
+			int mezivypocetGoly3;
+			char rozhodnutiGoly1;
+			char rozhodnutiGoly2;
+			char rozhodnutiGoly3;
+			
 	do{
+		
+			printf("\n");
 	
-	printf("\n\tWhich option do you choose? ");
+	//printf("\tZjednodusena verze | Posledni update: 23/3/2024 | Skolni projekt, vytvoril Hlozek\n");
+	printf("\thttps://github.com/Tobiswaggy\n"); 
+	printf("\n");
+	
+printf("\t   :::     ::: :::::::::: ::::::::      :::      ::::::::\n"); 
+printf("\t  :+:     :+: :+:       :+:    :+:   :+: :+:   :+:    :+:\n"); 
+printf("\t +:+     +:+ +:+       +:+         +:+   +:+  +:+        \n"); 
+printf("\t+#+     +:+ +#++:++#  :#:        +#++:++#++: +#++:++#++  \n"); 
+printf("\t+#+   +#+  +#+       +#+   +#+# +#+     +#+        +#+   \n"); 
+printf("\t#+#+#+#   #+#       #+#    #+# #+#     #+# #+#    #+#    \n"); 
+printf("\t ###     ########## ########  ###     ###  ########      \n\n"); 
+	
+	//printf("\tSimulator kasino her\n"); 
+
+	
+/*
+	printf("\t $$\    $$\                                  $$\\n");   
+	printf("\t $$ |   $$ |                               $$$$$$\\n");   
+	printf("\t $$ |   $$ | $$$$$$\   $$$$$$\   $$$$$$\  $$  __$$\\n");  
+	printf("\t \$$\  $$  |$$  __$$\ $$  __$$\  \____$$\ $$ /  \__|\n"); 
+ 	printf("\t \$$\$$  / $$$$$$$$ |$$ /  $$ | $$$$$$$ |\$$$$$$\\n");   
+	printf("\t  \$$$  /  $$   ____|$$ |  $$ |$$  __$$ | \___ $$\\n");  
+	printf("\t   \$  /   \$$$$$$$\ \$$$$$$$ |\$$$$$$$ |$$\  \$$ |\n"); 
+	printf("\t    \_/     \_______| \____$$ | \_______|\$$$$$$  |\n"); 
+	printf("\t                     $$\   $$ |           \_$$  _/\n");  
+	printf("\t                     \$$$$$$  |             \ _/\n");    
+	printf("\t                      \______/\n");                      
+
+printf("\t _  _  ____  ___   __   ____ \n");
+printf("\t/ )( \(  __)/ __) / _\ / (__)\n");
+printf("\t\ \/ / ) _)( (_ \/    \\__  \\n");
+printf("\t \__/ (____)\___/\_/\_/(__)_/\n");
+
+printf("\t __     __                    _ \n"); 
+printf("\t \ \   / /___   __ _   __ _  | |\n"); 
+printf("\t  \ \ / // _ \ / _` | / _` |/ __)\n");
+printf("\t   \ V /|  __/| (_| || (_| |\__ \\n");
+printf("\t    \_/  \___| \__, | \__,_|(   /\n");
+printf("\t               |___/         |_|\n"); 
+
+printf("\t██    ██ ███████  ██████   █████  ███████\n"); 
+printf("\t██    ██ ██      ██       ██   ██ ██\n");      
+printf("\t██    ██ █████   ██   ███ ███████ ███████\n"); 
+printf("\t ██  ██  ██      ██    ██ ██   ██      ██\n"); 
+printf("\t  ████   ███████  ██████  ██   ██ ███████\n"); 
+  */                                         
+                                          	
+	printf("\t1. Hod minci\n");
+	printf("\t2. Hod kostkou\n");
+	printf("\t3. Herni automat\n");
+	printf("\t4. Stiraci losy\n");
+	printf("\t5. Sportovni zapasy\n");
+
+//	printf("\t4. Rules and probability (english)\n");
+//	printf("\t5. Pravidla a pravdepodobnost (cesky)\n");
+	printf("\t6. Zustatek herniho uctu\n");
+
+	/*
+	printf("\t7. Nastaveni\n");
+	printf("\t8. Credits\n");
+	*/
+	printf("\t7. Credits\n");
+	printf("\t8. Ukoncit program\n");
+	printf("\n\tZadej moznost: ");
 	scanf("%d", &decisionMenu);
+	
+	if(decisionMenu < 1 && decisionMenu > 8){
+		printf("\n\tNeplatna moznost.\n\t");
+		return 0;
+	}
 	
 	
 	switch(decisionMenu){
@@ -151,25 +241,28 @@ int main(){
 																				case 1: // hod minci
 				
 		// program dokaze hodit minci 18446744073709551615 krat
+	do{
 	
-	printf("Coinflip simulator\n");
+	printf("\n");
+	printf("\tHod minci\n");
 	
-	printf("How many coinflips do you want to simulate? ");
+	printf("\tKolikrat si prejes hodit minci? ");
 	scanf("%d", &decisionCount);
 	
 	
 	if(decisionCount <= 0){
-		printf("A coin must be flipped atleast once!");
+		printf("\tMince musi byt hozena alespon jednou!");
 		return 0;
 	}
 	
-	printf("Warning! Outputting a large amount of coinflips may take a long time!\n");
-	printf("Do you want to see every single coinflip made? (Y/N): ");
+	printf("\tVarovani! Prilis velka hodnota muze zpusobit zaseknuti programu!\n");
+	printf("\tPrejes si, aby program vypisoval jednotlivy hod mince? (Y/N): ");
 	scanf(" %c", &decisionShow);
 	
 	
 	if(decisionShow != 'y' && decisionShow != 'Y' && decisionShow != 'n' && decisionShow != 'N'){
-		printf("You have to answer with either Y or N!");
+		printf("\n");
+		printf("\tNeplatna odpoved!");
 		return 0;
 	}
 	
@@ -181,7 +274,7 @@ int main(){
 		if(random == 0){
 			
 			if(decisionShow == 'y' || decisionShow == 'Y'){
-			printf("Coinflip number %d - Heads\n", i);
+			printf("\tHod cislo %d - Panna\n", i);
 			}
 			
 			heads++;
@@ -189,7 +282,7 @@ int main(){
 		}else if(random == 1){
 			
 			if(decisionShow == 'y' || decisionShow == 'Y'){
-			printf("Coinflip number %d - Tails\n", i);
+			printf("\tHod cislo %d - Orel\n", i);
 			}
 			
 			tails++;
@@ -199,406 +292,93 @@ int main(){
 	
 	printf("\n");
 	
-	printf("The coin has been flipped a total of %d times.\n", decisionCount);
+	printf("\tMince byla hozena %d krat.\n", decisionCount);
 
 	printf("\n");
 	
-	printf("Heads: %d\n", heads);
-	printf("Tails: %d", tails);
+	printf("\tPanna: %d\n", heads);
+	printf("\tOrel: %d", tails);
 	
 	printf("\n");
 		
 		float ratioHeads = ((float)heads / decisionCount) * 100;
 		float ratioTails = ((float)tails / decisionCount) * 100;
 		
-	printf("Percentage ratio: ");
-	printf("%.2f%% | ", ratioHeads);
-	printf("%.2f%%", ratioTails);
+	printf("\tProcentualni pomer: ");
+	printf("\t%.2f%% | ", ratioHeads);
+	printf("\t%.2f%%", ratioTails);
 	
 	printf("\n");
-	printf("\n");	
-				
-		break;
-		
-																							case 2: // blackjack
-			
-			printf("We currently have only about 100 lines of code for blackjack...\n");
-			printf("This game is currently being reworked\n");
-			
-			/*
-			
-printf("Vitej v aplikaci Blackjack. Projekt vytvoril Tobiswaggy.\n", 1);
-	
-	// dev note: variables jsou v anglictine protoze anglicky to zni lip
-	// stay mad
-			
 	printf("\n");
 	
-	printf("Zadej sazku: ");
+	printf("\tPrejes si hrat znovu? (Y/N): ");
+	scanf(" %c", &rozhodnutiMince);
 	
-		scanf("%d", &playerBet);
-	
-	if(playerBet > playerBalance){
-		
-		printf("Nemas dostatecne finance");
-		
+	if(rozhodnutiMince != 'n' && rozhodnutiMince != 'y'){
+		printf("\n");
+		printf("\tNeplatna moznost!\n");
+		system("PAUSE");
 		return 0;
-	}
+	}	
 	
-	printf("\n");
-	
-	printf("Startuji hru.\n");
-	
-	printf("\n");
+	system("cls");
+			
+}while(rozhodnutiMince != 'n');
 
-/* JE TO V HAJZLU - OPRAVIT PROMENNY A NAMRDAT TO DO PODPROGRAMU
-
-	generateNumber();
-		playerCard1 = 0 + returnBlackjack();
-	
-	// mezivypocet
-		playerHand2 = playerCard + playerCard;
-	
-	generateNumber();
-		dealerCard1 = 0 + retur1nNumber();   2
-	
-	generateNumber();
-		dealerCard2 = 0 + returnNumber();	
-	
-	// mezivypocet
-		dealerHand = dealerCard1 + dealerCard2;
-	
-	printf("Vase prvni karta je %d\n", playerCard1);
-	
-		printf("Vase druha karta je %d\n", playerCard2);
-		
-			printf("Soucet vasich karet cini %d\n", playerHand);
-	
-	printf("Dealerova prvni karta je %d\n", dealerCard1);
-	
-		printf("Dealerova druha karta je skryta.\n");
-	
-	printf("Hit (1) / stand (0): \n");
-		scanf("%d", &standHit);
-	
-	
-	// toto cely musi jit do hajzlu - rework do podprogramu
-	
-/*	
-	if(standHit == 0){
-		
-		printf("Stand!\n");
-		
-		printf("Dealerova skryta odkryta: %d\n", dealerCard2);
-		
-		printf("Soucet dealerovych karet je %d\n", dealerHand);
-		
-		if(dealerHand < playerHand){
-			
-			generateNumber();
-			dealerCard3 = 0 + returnNumber();
-			printf("Dealerova treti karta je %d\n", dealerCard3);
-			
-			dealerHand = dealerHand + dealerCard3;
-			
-			printf("Dealer ma %d!", dealerHand);
-						
-			if(dealerHand < playerHand){
-			generateNumber();
-			dealerCard4 = 0 + returnNumber();
-			printf("Dealerova ctvrta karta je %d\n", dealerCard4);
-			
-			dealerHand = dealerHand + dealerCard4;
-			
-			printf("Dealer ma %d!", dealerHand);		
-			}
-		}
-	}
-*/
-		
-																							break;
-		
-																							case 3: // ruleta
-			
-			// cerna cisla: 2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35
-						
-			do{
-			
-			skip = 0;
-			
-			printf("Roulette table.\n");
-			printf("1. Bet on an exact number\n");
-			printf("2. Bet on either red or black\n");
-			printf("3. Bet on either odd or even\n");
-			printf("4. 1 through 18 | 19 through 36\n");
-			printf("5. 1st twelve | 2nd twelve | 3rd twelve\n");
-			printf("6. Exit program\n");
-			
-			printf("Which option do you choose? ");
-			scanf("%d", &rouletteMenu);
-			
-			switch(rouletteMenu){
-				
-				case 1:
-					
-					printf("Which number do you choose? (0-36) ");
-					scanf("%d", &rouletteGuess);
-					
-					if(rouletteGuess > 36 || rouletteGuess < 0){
-						printf("This number does not exist.");
-						return 0;
-					}
-					
-				break;
-				
-				case 2:
-					
-					printf("Do you wanna bet on red or black? (R/B): ");
-					scanf(" %c", &redOrBlack);
-					
-					if(redOrBlack != 'r' && redOrBlack != 'R' && redOrBlack != 'b' && redOrBlack != 'B'){
-						printf("This color does not exist.");
-						return 0;
-					}
-					
-				break;
-				
-				case 3:
-					
-					printf("Do you wanna bet on odd or even? (O/E): ");
-					scanf(" %c", &oddOrEven);
-					
-					if(oddOrEven != 'o' && oddOrEven != 'O' && oddOrEven != 'e' && oddOrEven != 'E'){
-						printf("This option is invalid.");
-						return 0;
-					}
-					
-				break;
-				
-				case 4:
-					
-					printf("1 through 18 or 19 through 36? (1/2): ");
-					scanf("%d", &numThroughNum);
-					
-					if(numThroughNum != 1 && numThroughNum != 2){
-						printf("This option is invalid.");
-						return 0;
-					}
-					
-				break;
-				
-				case 5:
-					
-					printf("1st twelve or 2nd twelve or 3rd twelve? (1/2/3): ");
-					scanf("%d", &pairTwelve);
-					
-					if(pairTwelve != 1 && pairTwelve != 2 && pairTwelve != 3){
-						printf("This option is invalid.");
-						return 0;
-					}
-					
-				break;
-				
-				case 6:
-					
-					printf("Quiting...\n");
-					return 0;
-					
-				break;
-						
-			}
-			
-			printf("Your balance is %d\n", balance);
-			
-			printf("Place your bet: ");
-			scanf("%d", &rouletteBet);
-			
-			if(rouletteBet > balance){
-				printf("Insufficient balance.");
-				return 0;
-			}
-			
-			balance = balance - rouletteBet;
-			
-			generateNumber();
-			rouletteActual = returnRoulette();
-			
-			printf("Number %d has been rolled!\n", rouletteActual);
-			
-			if(rouletteGuess == rouletteActual){
-				printf("Straight up.\n");
-				
-				rouletteWin = rouletteBet * 35;
-				
-				printf("You win %d $"), rouletteWin;
-				
-				skip++;
-			}
-
-// jsem linej hajzl, nechtelo se mi na tohle delat podprogram
-
-if ((redOrBlack == 'r' && redOrBlack == 'R') && 
-        (rouletteActual == 1 || rouletteActual == 3 || rouletteActual == 5 || 
-         rouletteActual == 7 || rouletteActual == 9 || rouletteActual == 12 || 
-         rouletteActual == 14 || rouletteActual == 16 || rouletteActual == 18 || 
-         rouletteActual == 19 || rouletteActual == 21 || rouletteActual == 23 || 
-         rouletteActual == 25 || rouletteActual == 27 || rouletteActual == 30 || 
-         rouletteActual == 32 || rouletteActual == 34 || rouletteActual == 36)) {
-         	
-  				printf("Red number!\n");
-  				
-				rouletteWin = rouletteBet * 2;
-				
-  				printf("You win %d$\n", rouletteWin);
-  				
-  				skip++;
-  				
-}else if ((redOrBlack == 'b' && redOrBlack == 'B') && 
-        (rouletteActual == 2 || rouletteActual == 4 || rouletteActual == 6 || 
-         rouletteActual == 8 || rouletteActual == 10 || rouletteActual == 11 || 
-         rouletteActual == 13 || rouletteActual == 15 || rouletteActual == 17 || 
-         rouletteActual == 20 || rouletteActual == 22 || rouletteActual == 24 || 
-         rouletteActual == 26 || rouletteActual == 28 || rouletteActual == 29 || 
-         rouletteActual == 31 || rouletteActual == 33 || rouletteActual == 35)) {
-         	
-  				printf("Black number!\n");
-  			
-				rouletteWin = rouletteBet * 2;
-  			
-  				printf("You win %d$\n", rouletteWin);
-			  
-			  skip++;
-}
-
-    if ((oddOrEven == 'o' && oddOrEven == 'O') && rouletteActual % 2 != 0) {
-    	
-		printf("Odd number!\n");
-		
-				rouletteWin = rouletteBet * 2;
-		
-		printf("You win %d$\n", rouletteWin);
-        
-        skip++;
-        
-    } else if ((oddOrEven == 'e' && oddOrEven == 'E') && rouletteActual % 2 == 0) {
-  
-		printf("Even number!\n");
-		
-				rouletteWin = rouletteBet * 2;
-		
-		printf("You win %d$\n", rouletteWin); 	
-       
-       	skip++;
-    } 
-	
-	
-	if(numThroughNum == 1 && rouletteActual >= 1 && rouletteActual <= 18){
-		
-		printf("1 through 18!\n");
-		
-				rouletteWin = rouletteBet * 2;
-		
-		printf("You win %d$\n", rouletteWin);
-		
-		skip++;
-		
-	}else if(numThroughNum == 2 && rouletteActual >= 19 && rouletteActual <= 36){
-		
-		printf("19 through 36!\n");
-		
-						rouletteWin = rouletteBet * 2;
-						
-		printf("You win %d$\n", rouletteWin);
-		
-		skip++;
-		
-	}
-	
-if(pairTwelve == 1 && rouletteActual >= 1 && rouletteActual <= 12){
-	
-	printf("First twelve!\n");
-	
-					rouletteWin = rouletteBet * (rouletteBet * 2);
-					
-	printf("You win %d$\n", rouletteWin);
-	
-	skip++;
-}
-else if(pairTwelve == 2 && rouletteActual >= 13 && rouletteActual <= 24){
-	
-	printf("Second twelve!\n");
-	
-						rouletteWin = rouletteBet * (rouletteBet * 2);
-						
-	printf("You win %d$\n", rouletteWin);
-	
-	skip++;
-}
-else if(pairTwelve == 3 && rouletteActual >= 25 && rouletteActual <= 36){
-	
-	printf("Third twelve!\n");
-	
-						rouletteWin = rouletteBet * (rouletteBet * 2);
-						
-	printf("You win %d$\n", rouletteWin);
-	
-	skip++;
-}
-
-if(skip == 0){
-	printf("You lose.\n");
-}
-			
-}while(rouletteMenu != 7);
-
-		
 		break;
 		
-																								case 4: // hod kostkou
+
+
 		
-			printf("Dice roll\n");
+																								case 2: // hod kostkou
+		
+
 			
-			printf("1. Dice gambling\n");
-			printf("2. Dice simulator\n");
-			printf("3. Exit program\n");
+			do{
+							printf("\n");
+		
+			printf("\tHod kostkou\n");
 			
-			printf("Enter your option: ");
+			printf("\n");
+			
+			printf("\t1. Simulator hodu kostkou\n");
+			printf("\t2. Zpatky do menu\n");
+			
+			printf("\n");
+			
+			printf("\tZadej moznost: ");
 			scanf("%d", &diceMenu);
 			
 			if(diceMenu != 1 && diceMenu != 2 && diceMenu != 3){
-				printf("This is not a valid option!\n");
+				printf("\tToto neni platna moznost!\n");
+				system("PAUSE");
 				return 0;
 			}
-			
-			do{
+				
 				switch(diceMenu){
 					
 					case 1:
 						
-					break;
-					
-					case 2:
-						
-						printf("How many times do you want to roll the dice? ");
+						printf("\tKolikrat si prejes hodit kostkou? ");
 						scanf("%d", &diceSimulator);
 						
-						printf("Warning: Displaying a huge amount of rolls may take a long time!\n");
+						printf("\tVarovani! Prilis velka hodnota muze zpusobit zaseknuti programu!\n");
 						
-						printf("Do you want to display each roll? (Y/N): ");
+						printf("\tPrejes si, aby program vypisoval jednotlivy hod kostkou? (Y/N): ");
 						scanf(" %c", &diceDecision);
 						
 						if(diceDecision != 'y' && diceDecision != 'Y' && diceDecision != 'n' && diceDecision != 'M'){
-							printf("This is not a valid option!\n");
+							printf("\tToto neni platna moznost!\n");
 							return 0;
 						}
 						
-						for(i=0; i <= diceSimulator; i++){
+						for(i=0; i < diceSimulator; i++){
 							
 							generateNumber();
 							diceRoll = returnDice();
 							
-							if(diceDecision == 'y' && diceDecision == 'Y'){
-								printf("Dice roll number %d: %d\n", i, diceRoll);
+							if(diceDecision == 'y'){
+								printf("\tHod kostkou cislo %d: %d\n", i, diceRoll);
 							}
 							
 							if(diceRoll == 1){
@@ -628,48 +408,67 @@ if(skip == 0){
 							}
 						}
 						
-						printf("A total of %d dices have been rolled.\n", i);
+						float vypocet1 = ((float)diceOnes / diceSimulator) * 100;
+						float vypocet2 = ((float)diceTwos / diceSimulator) * 100;
+						float vypocet3 = ((float)diceThrees / diceSimulator) * 100;												
+						float vypocet4 = ((float)diceFours / diceSimulator) * 100;						
+						float vypocet5 = ((float)diceFives / diceSimulator) * 100;						
+						float vypocet6 = ((float)diceSixes / diceSimulator) * 100;
 						
-						printf("Ones: %d\n", diceOnes);
-						printf("Twos: %d\n", diceTwos);
-						printf("Threes: %d\n", diceThrees);
-						printf("Fours: %d\n", diceFours);
-						printf("Fives: %d\n", diceFives);
-						printf("Sixes: %d\n", diceSixes);						
+						printf("\n\tBylo hozeno celkem %d kostek.\n", i);
+						printf("\n\tProcentualni pomery:\n");
 						
-					break;
-					
-					case 3:
-						
-						printf("Quitting...\n");
-						return 0;
+						printf("\n\tJednicky: %d | %.2f%%\n", diceOnes, vypocet1);
+						printf("\tDvojky: %d | %.2f%%\n", diceTwos, vypocet2);
+						printf("\tTrojky: %d | %.2f%%\n", diceThrees, vypocet3);
+						printf("\tCtyrky: %d | %.2f%%\n", diceFours, vypocet4);
+						printf("\tPetky: %d | %.2f%%\n", diceFives, vypocet5);
+						printf("\tSestky: %d | %.2f\n", diceSixes, vypocet6);											
 						
 					break;
 					
 				}
-			}while(diceMenu != 3);
+				
+				printf("\n");
+				printf("\t");
+				system("PAUSE");
+				system("cls");
+				
+			}while(diceMenu != 2);
 			
 			/* generateNumber();
 			returnDice(); */
 			
 		break;
 			
-																case 5: // automat
-		
-			printf("Slot machine\n");
-			printf("Rules:\n");
-			printf("One seven - 1.5x payout\n");
-			printf("Two sevens - 8x payout\n");
-			printf("Three sevens - 50x payout\n");
-			printf("\n");
-			printf("2 same numbers - 3x payout\n");
-			printf("3 same numbers - 50x payout\n");
+																case 3: // automat
+		printf("\n");
+			printf("\tHerni automat\n");
+			printf("\n\tPravidla:\n");
+			printf("\n\tJedna sedmicka - cashback\n");
+			printf("\tDve sedmicky - 7x payout\n");
+			printf("\tTri sedmicky - 77x payout\n");
+			printf("\t2 stejna cisla - 2x payout\n");
+			printf("\t3 stejna cisla - 33x payout\n");
 			printf("\n");
 			
 			do{
 				
-				printf("Place a bet: ");
+				printf("\tZadej sazku: ");
 				scanf("%d", &slotBet);
+				
+					if(slotBet > balance)
+					{
+						printf("\n");
+						printf("\tNemas dostatek financi!\n");
+						printf("\t");
+						system("PAUSE");
+						return 0;	
+					}					
+	
+					balance = balance - slotBet;
+
+			
 				
 				generateNumber();
 				slotOne = returnSlot();
@@ -680,86 +479,805 @@ if(skip == 0){
 				generateNumber();
 				slotThree = returnSlot();
 				
-				for(i=0; i<10; i++){
-					printf("Spinning.\n");
-				}
+				printf("\n");
 				
-				if(slotOne == 7 || slotTwo == 7 || slotThree == 7){
-					slotWin = slotBet * 1.5;
-					printf("1.5x payout. You win %d$\n", slotWin);
+					printf("\tRESETTING.\n");
+					sleep(1);
+					printf("\tRESETTING..\n");
+					sleep(1);
+					printf("\tRESETTING...\n");
+					sleep(1);
+				
+				/*
+				printf("\t__________\n");
+				printf("\t|%d|%d|%d|\n", slotOne, slotTwo, slotThree);
+				printf("\t|__|__|__|\n");
+				*/
+				
+						printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|                           |\n");						
+						printf("\t|    777 LUCK MASTER 777    |\n");
+						printf("\t|________ __________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   [?]  |   [?]  |   [?]   |\n");
+						printf("\t|________|________|_________|\n");
+						printf("\t|                           |\n");						
+						printf("\t|        PLAY TO WIN        |\n");
+						printf("\t|   YOU ARE ONE SPIN AWAY   |\n");
+						printf("\t|___________________________|\n");
+						
+						printf("\t");
+						system("PAUSE");
+						system("cls");
+						
+						printf("\n");
+						for(k=0; k<7; k++){
+
+						printf("\t____________________________\n");
+						printf("\t|                           |\n");						
+						printf("\t|    777 LUCK MASTER 777    |\n");
+						printf("\t|________ __________________|\n");
+						printf("\t|        |        |         |\n");
+												sleep(0.2);
+						printf("\t|   %d    |   %d    |   [?]   |\n", slotOne, animace[k]);
+						printf("\t|________|________|_________|\n");
+						printf("\t|                           |\n");						
+						printf("\t|        PLAY TO WIN        |\n");
+						printf("\t|   YOU ARE ONE SPIN AWAY   |\n");
+						printf("\t|___________________________|\n");
+						system("cls");
+				}
+
+						for(l=0; l<7; l++){						
+						printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|                           |\n");						
+						printf("\t|    777 LUCK MASTER 777    |\n");
+						printf("\t|________ __________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   %d    |   %d    |   %d    |\n", slotOne, slotTwo, animace[l]);
+						printf("\t|________|________|_________|\n");
+						printf("\t|                           |\n");						
+						printf("\t|        PLAY TO WIN        |\n");
+						printf("\t|   YOU ARE ONE SPIN AWAY   |\n");
+						printf("\t|___________________________|\n");
+						system("cls");
+}
+						
+						printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|                           |\n");						
+						printf("\t|    777 LUCK MASTER 777    |\n");
+						printf("\t|________ __________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   %d    |   %d    |   %d     |\n", slotOne, slotTwo, slotThree);
+						printf("\t|________|________|_________|\n");
+						printf("\t|                           |\n");						
+						printf("\t|        PLAY TO WIN        |\n");
+						printf("\t|   YOU ARE ONE SPIN AWAY   |\n");
+						printf("\t|___________________________|\n");
+						
+						printf("\n");
+										if(slotOne == 7 || slotTwo == 7 || slotThree == 7){
+					slotWin = slotBet * 1.0;
+					printf("\t1.0x payout. Vyhravas %d$\n", slotWin);
 				}else if(slotOne == 7 && slotTwo == 7){
-					slotWin = slotBet * 8;
-					printf("8x payout. You win %d$\n", slotWin);
+					slotWin = slotBet * 7;
+					printf("\t7x payout. Vyhravas %d$\n", slotWin);
 				}else if(slotTwo == 7 && slotThree == 7){
-					slotWin = slotBet * 8;
-					printf("8x payout. You win %d$\n", slotWin);
+					slotWin = slotBet * 7;
+					printf("\t7x payout. Vyhravas %d$\n", slotWin);
 				}else if(slotOne == 7 && slotThree == 7){
-					slotWin = slotBet * 8;
-					printf("8x payout. You win %d$\n", slotWin);
+					slotWin = slotBet * 7;
+					printf("\t7x payout. Vyhravas %d$\n", slotWin);
 				}else if(slotOne == 7 && slotTwo == 7 && slotThree == 7){
-					slotWin = slotBet * 50;
-					printf("Jackpot! You win %d$\n", slotWin);
+					slotWin = slotBet * 77;
+					printf("\tJackpot! Vyhravas %d$\n", slotWin);
 					
 				}else if(slotOne == slotTwo || slotTwo == slotThree || slotOne == slotThree){
-					slotWin = slotBet * 3;
-					printf("3x payout. You win %d$\n", slotWin);
+					slotWin = slotBet * 2;
+					printf("\t2x payout. Vyhravas %d$\n", slotWin);
 				}else if(slotOne == slotTwo && slotTwo == slotThree && slotOne == slotThree){
-					slotWin = slotBet * 50;
-					printf("Jackpot! You win %d$\n", slotWin);
+					slotWin = slotBet * 33;
+					printf("\tJackpot! Vyhravas %d$\n", slotWin);
 				}
 				
-				printf("%d | %d | %d\n", slotOne, slotTwo, slotThree);
+				balance = balance + slotWin;
+				printf("\tMas %.2f dolaru.\n", balance);
+				printf("\n");
 				
-				printf("Type 1 to roll again. Type 0 to stop: \n");
+
+				printf("\n");
+				printf("\t1 pro dalsi hru, 0 pro zastaveni: \n");
 				scanf("%d", &slotMenu);
 								
 			}while(slotMenu != 0);
 			
-		break;
-		
-		case 6: // otevre separatni textovej soubor ve slozce (anglicky preklad)
-		
-			system ("rules.html");
-			 // https://stackoverflow.com/questions/17417718/how-to-open-a-text-file-in-notepad-in-a-c-program
-		
-		break;	
-		
-		case 7:
-		
-			system("pravidla.html");
+			printf("\t");
+			system("PAUSE");
+			system("cls");
 			
 		break;
 		
-		case 8:
+		case 4:
+			// losyMenu
+			// policko1
+			// policko2
+			// policko3
+			// losGenerator
+			// returnScratch <- fce
 			
-			printf("Your balance is %d$\n", balance);
-			
-		break;
-		
-		case 9:
-			
-			printf("Coming soon...\n");
-			
-		break;
-		
-		case 10:
-			
-			system("credits.bat");
-			system("popups.vbs");
+					do{
+					printf("\n");
+					printf("\t1. Zlata perla | Cena: 50 dolaru\n");
+					printf("\t2. Zpatky\n\n");
 					
-		break;			
-		
-		case 11: // ukonceni programu
-		
-						printf("Quitting...\n");
-			return 0;
+					printf("\tZadej moznost: ");
+					scanf("%d", &losyMenu);	
+					
+						switch(losyMenu){
+							case 1:
+								
+								balance = balance - 50;
+								printf("\n");
+								printf("\tZakoupil jsi los za 50$. Zbyva ti %.2f$", balance);
+								
+								printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|        ZLATA PERLA        |\n");
+						printf("\t|___________________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   [?]  |   [?]  |   [?]   |\n");
+						printf("\t|________|________|_________|\n");
+						printf("\t| 2x stejne cislo: 100$     |\n");
+						printf("\t| 3 stejna cisla = 1,000$   |\n");
+						printf("\t|___________________________|\n");
+						printf("\t| Hodne stesti preje Sazka! |\n");
+						printf("\t|___________________________|\n");
+						
+						printf("\t");
+						system("PAUSE");
+						system("cls");
+						
+						generateNumber();
+						policko1 = returnScratch() * 10;
+						
+								printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|        ZLATA PERLA        |\n");
+						printf("\t|___________________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   %d   |   [?]  |   [?]   |\n", policko1);
+						printf("\t|________|________|_________|\n");
+						printf("\t| 2x stejne cislo: 100$     |\n");
+						printf("\t| 3 stejna cisla = 1,000$   |\n");
+						printf("\t|___________________________|\n");
+						printf("\t| Hodne stesti preje Sazka! |\n");
+						printf("\t|___________________________|\n");		
+								
+								
+						printf("\t");
+						system("PAUSE");
+						system("cls");
+						
+						generateNumber();
+						policko2 = returnScratch() * 10;						
+
+								printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|        ZLATA PERLA        |\n");
+						printf("\t|___________________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   %d   |   %d   |   [?]   |\n", policko1, policko2);
+						printf("\t|________|________|_________|\n");
+						printf("\t| 2x stejne cislo: 100$     |\n");
+						printf("\t| 3 stejna cisla = 1,000$   |\n");
+						printf("\t|___________________________|\n");
+						printf("\t| Hodne stesti preje Sazka! |\n");
+						printf("\t|___________________________|\n");
+							
+
+						printf("\t");
+						system("PAUSE");
+						system("cls");
+						
+						generateNumber();
+						policko3 = returnScratch() * 10;
+						
+								printf("\n");
+						printf("\t____________________________\n");
+						printf("\t|        ZLATA PERLA        |\n");
+						printf("\t|___________________________|\n");
+						printf("\t|        |        |         |\n");
+						printf("\t|   %d   |   %d   |   %d    |\n", policko1, policko2, policko3);
+						printf("\t|________|________|_________|\n");
+						printf("\t| 2x stejne cislo: 100$     |\n");
+						printf("\t| 3 stejna cisla = 1,000$   |\n");
+						printf("\t|___________________________|\n");
+						printf("\t| Hodne stesti preje Sazka! |\n");
+						printf("\t|___________________________|\n");
+										
+							if(policko1 == policko2 && policko2 == policko3 && policko1 == policko3){
+								printf("\n");
+								printf("\tVyhravas 1000 dolaru!\n");
+								balance = balance + 1000;
+							}else if(policko1 == policko2){
+								printf("\n");
+								printf("\tVyhravas 100 dolaru!\n");
+								balance = balance + 100;								
+							}else if(policko2 == policko3){
+								printf("\n");
+								printf("\tVyhravas 100 dolaru!\n");
+								balance = balance + 100;
+							}else if(policko1 == policko3){
+								printf("\n");
+								printf("\tVyhravas 100 dolaru!\n");
+								balance = balance + 100;
+							}else{
+								printf("\n");
+								printf("\tTento los bohuzel nebyl vyherni...\n");
+							}
+										
+							printf("\n");
+							printf("\tNovy stav konta: %.2f\n", balance);
+							printf("\n");
+							printf("\t");
+							system("PAUSE");
+							system("cls");
+						
+						break;
+						
+					}
+					
+					}while(losyMenu != 2);	
+					
+					printf("\t");
+					system("PAUSE");
+					system("cls");
+					
+		break;
+/*		
+
+
+					printf("\n\t");
+					/*
+                     printf(",,ggddY""""Ybbgg,,");
+                 printf(",agd""'              `""bg,");
+              printf(",gdP"                       "Ybg,");
+            printf(",dP"                             "Yb,");
+          printf(",dP"         _,,ddP"""Ybb,,_         "Yb,");
+         printf(",8"         ,dP"'         `"Yb,         "8,");
+        printf(",8'        ,d"                 "b,        `8,");
+       printf(",8'        d"                     "b        `8,");
+       printf("d'        d'        ,gPPRg,        `b        `b");
+       printf("8         8        dP'   `Yb        8         8");
+       printf("\t8         8        8)     (8        8         8");
+       printf("8         8        Yb     dP        8         8");
+       printf("8         Y,        "8ggg8"        ,P         8");
+       printf("Y,         Ya                     aP         ,P");
+       printf("`8,         "Ya                 aP"         ,8'");
+        printf("`8,          "Yb,_         _,dP"          ,8'");
+         printf("`8a           `""YbbgggddP""'           a8'");
+          printf("`Yba                                 adP'");
+            printf(""Yba                             adY"");
+              printf("`"Yba,                     ,adP"'");
+                 printf("`"Y8ba,             ,ad8P"'");
+                      printf("``""YYbaaadPP""''");
+
+
+printf("\t_______                      ._.\n");
+printf("\t\   _  \    ______   ______  | |\n");
+printf("\t/  / \  \  /_____/  /_____/  |_|\n");
+printf("\t\  \_/   \ /_____/  /_____/  |-|\n");
+printf("\t \_____  /                   | |\n");
+printf("\t       \/                    |_|\n");
+
+*/		
+
+
+
+
+
+// SPORTOVNI SAZENI 
+
+
+		case 5:
+			
+			// fce pocetGolu
+			// fce tymyGoly
+	
+		/*		int sportMenu; // menu pro sazeni na sport
+			int prvniGolyT1 = 0; // goly tym 1
+			int prvniGolyT2 = 0; // goly tym 2
+			int druhyGolyT1 = 0;
+			int druhyGolyT2 = 0;
+			int tretiGolyT1 = 0;
+			int tretiGolyT2 = 0;
+			int sportSazka; // kolik vsadil uzivatel
+			int sportVyhra; // kolik vyhral uzivatel
+			int hideFirst = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int hideSecond = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int hideThird = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
+			int vysledekPrvni; // tip uzivatele na zapas 1
+			int vysledekDruhy; // tip uzivatele na zapas 2
+			int vysledekTreti; // tip uzivatele na zapas 3
+			int goalsInMatch; // kolik golu padne v zapase
+			int s; // ridici promenna cyklu
+			int mezivypocetGoly;
+			
+			int presnyPocetGolu1;
+			int presnyPocetGolu2;
+			int presnyPocetGolu3;
+			float sazkaGoly1;
+			float sazkaGoly2;
+			float sazkaGoly3;
+			float vyhraGoly1;
+			float vyhraGoly2;
+			float vyhraGoly3;
+		*/
+			
+			do{
+				printf("\n\tSazeni na sportovni zapasy\n");
 				
+				if(hideFirst == 0){
+				printf("\t1. FINALE TELH - HC Dynamo Pardubice vs. HC Sparta Praha\n");
+				}else if(hideFirst == 1){
+				printf("\t1. Tento zapas skoncil. Jiz neni mozne si na nej vsadit.\n");
+				}
+				
+				if(hideSecond == 0){
+				printf("\t2. Druha ceska hokejova liga - HK Ostrava Poruba vs. HK Usti nad Labem\n");
+				}else if(hideFirst == 1){
+				printf("\t2. Tento zapas skoncil. Jiz neni mozne si na nej vsadit.\n");
+				}
+				
+				if(hideThird == 0){
+				printf("\t3. Prvni mexicka fotbalova liga - FC Mexico City vs. FC Tijuana\n");
+				}else if(hideFirst == 1){
+				printf("\t3. Tento zapas skoncil. Jiz neni mozne si na nej vsadit.\n");
+				}
+				
+				printf("\t4. Zpatky do menu\n");
+				
+				printf("\n\tZadej volbu: ");
+				scanf("%d", &sportMenu);
+				
+				if(sportMenu == 1 && hideFirst == 1){
+					printf("\n\tTento zapas neexistuje!");
+					return 0;
+				}else if(sportMenu == 2 && hideSecond == 1){
+					printf("\n\tTento zapas neexistuje!");
+					return 0;
+				}else if(sportMenu == 3 && hideThird == 1){
+					printf("\n\tTento zapas neexistuje!");
+					return 0;					
+				}
+				
+				
+				switch(sportMenu){
+					
+					case 1:
+						
+						hideFirst++;
+						
+						printf("\n\tHC Dynamo Pardubice [Kurz 2.33] | Remiza [Kurz 1.88] | HC Sparta Praha [Kurz 3.14]\n");
+						printf("\tJaky bude vysledek zapasu? (Pardubice - 1, remiza - 2, Sparta - 3): ");
+						scanf("%d", &vysledekPrvni);
+						
+						if(vysledekPrvni != 1 && vysledekPrvni != 2 && vysledekPrvni != 3){
+							printf("\n\t Neplatna moznost!\n");
+							return 0;
+						}
+						
+						
+						
+						printf("\n\tKolik chces vsadit na tento vysledek: ");
+						scanf("%f", &sportSazka1);
+						
+						if(sportSazka1 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+						
+						balance = balance - sportSazka1;
+						
+						printf("\n\tPrejes si vsadit na presny pocet golu? (Y/N): ");
+						scanf(" %c", &rozhodnutiGoly1);
+						
+						if(rozhodnutiGoly1 == 'y'){
+							printf("\n\tKolik golu padne v zapase? (2-9): ");
+							scanf("%d", &presnyPocetGolu1);
+							
+							if(presnyPocetGolu1 < 2 && presnyPocetGolu1 > 9){
+								printf("\n\tMuzes zadat pouze 2 az 9!\n");
+								return 0;
+							}
+						
+							printf("\n\tKolik chces vsadit na presny pocet golu? ");
+							scanf("%d", &sazkaGoly1);
+							
+						if(sazkaGoly1 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+
+						balance = balance - sazkaGoly1;
+							
+						}else if(rozhodnutiGoly1 != 'y' && rozhodnutiGoly1 != 'n'){
+							printf("\n\tNeplatna moznost.\n");
+							return 0;
+						}
+						
+						
+														generateNumber();
+														goalsInMatch = 0 + pocetGolu();
+														
+														for(s=0; s < goalsInMatch; s++){
+															
+															sleep(1);
+															
+															generateNumber();
+															mezivypocetGoly = 0 + tymyGoly();
+															
+															if(mezivypocetGoly < 70){
+																printf("\n\tPardubice vstrelily gol!\n");
+																prvniGolyT1++;
+															}else{
+																printf("\n\tSparta vstrelila gol!\n");
+																prvniGolyT2++;																
+															}
+	
+														}
+														
+														printf("\n\tZapas skoncil!\n");
+														printf("\n\tVysledek zapasu: [%d:%d]\n", prvniGolyT1, prvniGolyT2);
+														
+						mezivypocetGoly1 = prvniGolyT1 + prvniGolyT2;
+						printf("\n\tV zapase padlo %d golu.\n", mezivypocetGoly1);
+						
+						if(rozhodnutiGoly1 == 'y' && presnyPocetGolu1 == mezivypocetGoly1){
+							printf("\tTva sazka na pocet golu byla vyhodnocena jako vyherni!\n");
+							vyhraGoly1 = sazkaGoly1 * 8;
+							balance = balance + vyhraGoly1;
+							printf("\tS kurzem 8.00 vyhravas %.2f a stav tveho herniho konta je nyni %.2f", vyhraGoly1, balance);
+						}else if(rozhodnutiGoly1 == 'y' && presnyPocetGolu1 != mezivypocetGoly1){
+							printf("\tTva sazka na pocet golu nebyla vyhodnocena jako vyherni.\n");
+						}
+						
+														
+						if(vysledekPrvni == 1 && prvniGolyT1 > prvniGolyT2){
+							sleep(1);
+							
+							sportVyhra1 = sportSazka1 * 2.33;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra1);
+						}else if(vysledekPrvni == 2 && prvniGolyT1 == prvniGolyT2){
+							sleep(1);
+							
+							sportVyhra1 = sportSazka1 * 1.88;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra1);
+						}else if(vysledekPrvni == 3 && prvniGolyT1 < prvniGolyT2){
+							sleep(1);
+							
+							sportVyhra1 = sportSazka1 * 3.14;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra1);
+						}else{
+							sleep(1);
+							
+							printf("\n\tTvuj tiket nebyl vyhodnocen jako vyherni.\n"); 
+						}
+						
+						balance = balance + sportVyhra1;
+						printf("\n\t Na ucte mas nyni %.2f dolaru.", balance);
+						
+
+					break;
+					
+					case 2:
+						
+						
+						
+						hideSecond++;
+						
+						printf("\n\tHK Ostrava Poruba [Kurz 1.67] | Remiza [Kurz 4.28] | HK Usti nad Labem [Kurz 8.50]\n");
+						printf("\tJaky bude vysledek zapasu? (Ostrava - 1, remiza - 2, Usti nad Labem - 3): ");
+						scanf("%d", &vysledekPrvni);
+						
+						if(vysledekPrvni != 1 && vysledekPrvni != 2 && vysledekPrvni != 3){
+							printf("\n\t Neplatna moznost!\n");
+							return 0;
+						}
+						
+						
+						
+						printf("\n\tKolik chces vsadit na tento vysledek: ");
+						scanf("%f", &sportSazka2);
+						
+						if(sportSazka2 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+						
+						balance = balance - sportSazka2;
+						
+						printf("\n\tPrejes si vsadit na presny pocet golu? (Y/N): ");
+						scanf(" %c", &rozhodnutiGoly2);
+						
+						if(rozhodnutiGoly2 == 'y'){
+							printf("\n\tKolik golu padne v zapase? (2-9): ");
+							scanf("%d", &presnyPocetGolu2);
+							
+							if(presnyPocetGolu2 < 2 && presnyPocetGolu2 > 9){
+								printf("\n\tMuzes zadat pouze 2 az 9!\n");
+								return 0;
+							}
+							
+							printf("\n\tKolik chces vsadit na presny pocet golu? ");
+							scanf("%d", &sazkaGoly2);
+							
+						if(sazkaGoly2 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+						
+						balance = balance - sazkaGoly2;
+						
+						}else if(rozhodnutiGoly2 != 'y' && rozhodnutiGoly2 != 'n'){
+							printf("\n\tNeplatna moznost.\n");
+							return 0;
+						}
+						
+														generateNumber();
+														goalsInMatch = 0 + pocetGolu();
+														
+														for(s=0; s < goalsInMatch; s++){
+															
+															sleep(1);
+															
+															generateNumber();
+															mezivypocetGoly = 0 + tymyGoly();
+															
+															if(mezivypocetGoly < 90){
+																printf("\n\tOstrava vstrelila gol!\n");
+																druhyGolyT1++;
+															}else{
+																printf("\n\tUsti nad Labem vstrelilo gol!\n");
+																druhyGolyT2++;																
+															}
+	
+														}
+														
+														printf("\n\tZapas skoncil!\n");
+														printf("\n\tVysledek zapasu: [%d:%d]\n", druhyGolyT1, druhyGolyT2);
+										
+						mezivypocetGoly2 = druhyGolyT1 + druhyGolyT2;
+						printf("\n\tV zapase padlo %d golu.\n", mezivypocetGoly2);
+						
+						if(rozhodnutiGoly2 == 'y' && presnyPocetGolu2 == mezivypocetGoly2){
+							printf("\tTva sazka na pocet golu byla vyhodnocena jako vyherni!\n");
+							vyhraGoly2 = sazkaGoly2 * 8;
+							balance = balance + vyhraGoly2;
+							printf("\tS kurzem 8.00 vyhravas %.2f a stav tveho herniho konta je nyni %.2f", vyhraGoly2, balance);
+						}else if(rozhodnutiGoly2 == 'y' && presnyPocetGolu2 != mezivypocetGoly2){
+							printf("\tTva sazka na pocet golu nebyla vyhodnocena jako vyherni.\n");
+						}
+														
+						if(vysledekPrvni == 1 && druhyGolyT1 > druhyGolyT2){
+							sleep(1);
+							
+							sportVyhra2 = sportSazka2 * 1.67;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra2);
+						}else if(vysledekPrvni == 2 && druhyGolyT1 == druhyGolyT2){
+							sleep(1);
+							
+							sportVyhra2 = sportSazka2 * 4.28;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra2);
+						}else if(vysledekPrvni == 3 && druhyGolyT1 < druhyGolyT2){
+							sleep(1);
+							
+							sportVyhra2 = sportSazka2 * 8.50;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra2);
+						}else{
+							sleep(1);
+							
+							printf("\n\tTvuj tiket nebyl vyhodnocen jako vyherni.\n");
+						}		
+					
+						balance = balance + sportVyhra2;
+						printf("\n\t Na ucte mas nyni %.2f dolaru.", balance);
+					
+					break;
+					
+					case 3:
+
+						
+						
+						 
+						hideThird++;
+						
+						printf("\n\tFC Mexico City [Kurz 1.42] | Remiza [Kurz 1.17] | FC Tijuana [Kurz 1.58]\n");
+						printf("\tJaky bude vysledek zapasu? (Mexico City - 1, remiza - 2, Tijuana - 3): ");
+						scanf("%d", &vysledekPrvni);
+						
+						if(vysledekPrvni != 1 && vysledekPrvni != 2 && vysledekPrvni != 3){
+							printf("\n\t Neplatna moznost!\n");
+							return 0;
+						}
+						
+						
+						
+						printf("\n\tKolik chces vsadit na tento vysledek: ");
+						scanf("%f", &sportSazka3);
+						
+						
+						if(sportSazka2 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+						
+						balance = balance - sportSazka3;
+						
+						printf("\n\tPrejes si vsadit na presny pocet golu? (Y/N): ");
+						scanf(" %c", &rozhodnutiGoly3);
+						
+						if(rozhodnutiGoly3 == 'y'){
+							printf("\n\tKolik golu padne v zapase? (2-9): ");
+							scanf("%d", &presnyPocetGolu3);
+							
+							if(presnyPocetGolu3 < 2 && presnyPocetGolu3 > 9){
+								printf("\n\tMuzes zadat pouze 2 az 9!\n");
+								return 0;
+							}
+							
+							printf("\n\tKolik chces vsadit na presny pocet golu? ");
+							scanf("%d", &sazkaGoly3);
+							
+						if(sazkaGoly3 > balance){
+							printf("\n\tNemas dostatek financi.\n");
+							return 0;
+						}
+						
+						balance = balance - sazkaGoly3;
+						
+						}else if(rozhodnutiGoly3 != 'y' && rozhodnutiGoly3 != 'n'){
+							printf("\n\tNeplatna moznost.\n");
+							return 0;
+						}
+						
+														generateNumber();
+														goalsInMatch = 0 + pocetGolu();
+														
+														for(s=0; s < goalsInMatch; s++){
+															
+															sleep(1);
+															
+															generateNumber();
+															mezivypocetGoly = 0 + tymyGoly();
+															
+															if(mezivypocetGoly < 50){
+																printf("\n\tMexico City vstrelilo gol!\n");
+																tretiGolyT1++;
+															}else{
+																printf("\n\tTijuana vstrelila gol!\n");
+																tretiGolyT2++;																
+															}
+	
+														}
+														
+														printf("\n\tZapas skoncil!\n");
+														printf("\n\tVysledek zapasu: [%d:%d]\n", tretiGolyT1, tretiGolyT2);
+									
+						mezivypocetGoly3 = tretiGolyT1 + tretiGolyT2;
+						printf("\n\tV zapase padlo %d golu.\n", mezivypocetGoly3);
+						
+						if(rozhodnutiGoly3 == 'y' && presnyPocetGolu3 == mezivypocetGoly3){
+							printf("\tTva sazka na pocet golu byla vyhodnocena jako vyherni!\n");
+							vyhraGoly3 = sazkaGoly3 * 8;
+							balance = balance + vyhraGoly3;
+							printf("\tS kurzem 8.00 vyhravas %.2f a stav tveho herniho konta je nyni %.2f", vyhraGoly3, balance);
+						}else if(rozhodnutiGoly3 == 'y' && presnyPocetGolu2 != mezivypocetGoly3){
+							printf("\tTva sazka na pocet golu nebyla vyhodnocena jako vyherni.\n");
+						}	
+													
+						if(vysledekPrvni == 1 && tretiGolyT1 > tretiGolyT2){
+							sleep(1);
+							
+							sportVyhra3 = sportSazka3 * 1.42;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra3);
+						}else if(vysledekPrvni == 2 && tretiGolyT1 == tretiGolyT2){
+							sleep(1);
+							
+							sportVyhra3 = sportSazka3 * 1.17;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra3);
+						}else if(vysledekPrvni == 3 && tretiGolyT1 < tretiGolyT2){
+							sleep(1);
+							
+							sportVyhra3 = sportSazka3 * 1.58;
+							printf("\n\tTvuj tiket byl vyhodnocen jako vyherni!\n");
+							printf("\tVyhravas %.2f dolaru.\n", sportVyhra3);
+						}else{
+							sleep(1);
+							
+							printf("\n\tTvuj tiket nebyl vyhodnocen jako vyherni.\n");
+						}
+					
+						balance = balance + sportVyhra3;
+						printf("\n\t Na ucte mas nyni %.2f dolaru.", balance);
+						
+					break;
+				}
+				
+			
+				
+			}while(sportMenu != 4);
+			
+			
 		break;
 		
+		
+		case 6:
+			
+			printf("\n");
+			printf("\tStav herniho konta je %.2f dolaru.\n", balance);
+			printf("\n");
+			printf("\t");
+			system("PAUSE");
+			system("cls");
+/*			
+		break;
+																									
+																											case 9:
+			
+																											printf("Coming soon...\n");
+			
+																									break;
+		
+																									case 10:
+			
+																											system("credits.bat");
+																											system("popups.vbs");
+					
+																									break;			
+		
+																								*/					
+		case 7:	
+		printf("\n");
+    printf("\t  _______      _      _                                            \n");
+    printf("\t |__   __|    | |    (_)                                           \n");
+    printf("\t    | |  ___  | |__   _  ___ __      __ __ _   __ _   __ _  _   _  \n");
+    printf("\t    | | / _ \\ | '_ \\ | |/ __|\\ \\ /\\ / // _` | / _` | / _` || | | | \n");
+    printf("\t    | || (_) || |_) || |\\__ \\ \\ V  V /| (_| || (_| || (_| || |_| | \n");
+    printf("\t    |_| \\___/|_.__/ |_|\\___/  \\_/\\_/  \\__,_| \\__, | \\__, | \\__, | \n");
+    printf("\t  ___    ___  ___   _  _                       __/ |  __/ |  __/ | \n");
+    printf("\t |__ \\  / _ \\|__ \\ | || |                     |___/  |___/  |___/  \n");
+    printf("\t    ) || | | |  ) || || |_                                         \n");
+    printf("\t   / / | | | | / / |__   _|                                        \n");
+    printf("\t  / /_ | |_| |/ /_    | |                                          \n");
+    printf("\t |____| \\___/|____|   |_|                                          \n");
+    printf("\t                                                                    \n");
+    printf("                                                                    \n");
+                                             
+		printf("\t");
+		system("PAUSE");
+		system("cls");
+
+		break;																		
+
 	}
 	
-}while(decisionMenu != 11);
+}while(decisionMenu != 8);
 
-	
+	printf("\t");
     system("PAUSE");
 }
+
+
+				
