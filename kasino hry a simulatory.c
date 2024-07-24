@@ -1,5 +1,4 @@
 // https://github.com/Tobiswaggy/CasinoSim/blob/main/kasino%20hry%20a%20simulatory.c
-// nektere casti kodu jsou napsany v anglictine protoze je pro me lepe citelna
 
 	#include <stdio.h>
 	#include <stdlib.h>
