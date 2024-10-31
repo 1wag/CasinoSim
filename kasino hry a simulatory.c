@@ -5,7 +5,6 @@
 	#include <time.h>
     #include <unistd.h>
 
-
 //zdroj: StackOverflow
 void generateNumber(){
 	static int initialized = 0;
@@ -15,23 +14,6 @@ void generateNumber(){
 	}
 }
 
-/*
-int checkBalance(int balance, int slotBet){
-	if(slotBet > balance){
-		
-		printf("\n");
-		printf("\tNedostatek financi.\n");
-		return 0;
-		
-	}else{
-		
-		printf("\n");
-		printf("\tVas zustatek je dostatecny. Na ucte mate %d dolaru.\n", balance);
-		return 1;
-		
-	}
-}
-*/
 int returnCoinflip(){
 	return rand() % 2;
 }
@@ -47,11 +29,7 @@ int returnSlot(){
 int returnScratch(){
 	return rand() % 5 + 1;
 }
-/*
-int returnBlackjack(){
-	return rand() % 10 + 2;
-}
-*/
+
 int pocetGolu(){
 	return rand() % 8 + 2;
 }
@@ -163,7 +141,7 @@ int main(){
 		
 			printf("\n");
 	
-	//printf("\tZjednodusena verze | Posledni update: 23/3/2024 | Skolni projekt, vytvoril Hlozek\n");
+	//Zjednodusena verze | Posledni update: 23/3/2024 | Skolni projekt, vytvoril Hlozek
 	printf("\thttps://github.com/Tobiswaggy\n"); 
 	printf("\n");
 	
@@ -173,57 +151,14 @@ printf("\t +:+     +:+ +:+       +:+         +:+   +:+  +:+        \n");
 printf("\t+#+     +:+ +#++:++#  :#:        +#++:++#++: +#++:++#++  \n"); 
 printf("\t+#+   +#+  +#+       +#+   +#+# +#+     +#+        +#+   \n"); 
 printf("\t#+#+#+#   #+#       #+#    #+# #+#     #+# #+#    #+#    \n"); 
-printf("\t ###     ########## ########  ###     ###  ########      \n\n"); 
-	
-	//printf("\tSimulator kasino her\n"); 
-
-	
-/*
-	printf("\t $$\    $$\                                  $$\\n");   
-	printf("\t $$ |   $$ |                               $$$$$$\\n");   
-	printf("\t $$ |   $$ | $$$$$$\   $$$$$$\   $$$$$$\  $$  __$$\\n");  
-	printf("\t \$$\  $$  |$$  __$$\ $$  __$$\  \____$$\ $$ /  \__|\n"); 
- 	printf("\t \$$\$$  / $$$$$$$$ |$$ /  $$ | $$$$$$$ |\$$$$$$\\n");   
-	printf("\t  \$$$  /  $$   ____|$$ |  $$ |$$  __$$ | \___ $$\\n");  
-	printf("\t   \$  /   \$$$$$$$\ \$$$$$$$ |\$$$$$$$ |$$\  \$$ |\n"); 
-	printf("\t    \_/     \_______| \____$$ | \_______|\$$$$$$  |\n"); 
-	printf("\t                     $$\   $$ |           \_$$  _/\n");  
-	printf("\t                     \$$$$$$  |             \ _/\n");    
-	printf("\t                      \______/\n");                      
-
-printf("\t _  _  ____  ___   __   ____ \n");
-printf("\t/ )( \(  __)/ __) / _\ / (__)\n");
-printf("\t\ \/ / ) _)( (_ \/    \\__  \\n");
-printf("\t \__/ (____)\___/\_/\_/(__)_/\n");
-
-printf("\t __     __                    _ \n"); 
-printf("\t \ \   / /___   __ _   __ _  | |\n"); 
-printf("\t  \ \ / // _ \ / _` | / _` |/ __)\n");
-printf("\t   \ V /|  __/| (_| || (_| |\__ \\n");
-printf("\t    \_/  \___| \__, | \__,_|(   /\n");
-printf("\t               |___/         |_|\n"); 
-
-printf("\t██    ██ ███████  ██████   █████  ███████\n"); 
-printf("\t██    ██ ██      ██       ██   ██ ██\n");      
-printf("\t██    ██ █████   ██   ███ ███████ ███████\n"); 
-printf("\t ██  ██  ██      ██    ██ ██   ██      ██\n"); 
-printf("\t  ████   ███████  ██████  ██   ██ ███████\n"); 
-  */                                         
+printf("\t ###     ########## ########  ###     ###  ########      \n\n");                                       
                                           	
 	printf("\t1. Hod minci\n");
 	printf("\t2. Hod kostkou\n");
 	printf("\t3. Herni automat\n");
 	printf("\t4. Stiraci losy\n");
 	printf("\t5. Sportovni zapasy\n");
-
-//	printf("\t4. Rules and probability (english)\n");
-//	printf("\t5. Pravidla a pravdepodobnost (cesky)\n");
 	printf("\t6. Zustatek herniho uctu\n");
-
-	/*
-	printf("\t7. Nastaveni\n");
-	printf("\t8. Credits\n");
-	*/
 	printf("\t7. Credits\n");
 	printf("\t8. Ukoncit program\n");
 	printf("\n\tZadej moznost: ");
@@ -237,7 +172,7 @@ printf("\t  ████   ███████  ██████  ██   �
 	
 	switch(decisionMenu){
 		
-																				case 1: // hod minci
+	case 1: // hod minci
 				
 		// program dokaze hodit minci 18446744073709551615 krat
 	do{
@@ -329,7 +264,7 @@ printf("\t  ████   ███████  ██████  ██   �
 
 
 		
-																								case 2: // hod kostkou
+		case 2: // hod kostkou
 		
 
 			
@@ -435,12 +370,10 @@ printf("\t  ████   ███████  ██████  ██   �
 				
 			}while(diceMenu != 2);
 			
-			/* generateNumber();
-			returnDice(); */
 			
 		break;
 			
-																case 3: // automat
+		case 3: // automat
 		printf("\n");
 			printf("\tHerni automat\n");
 			printf("\n\tPravidla:\n");
@@ -486,12 +419,6 @@ printf("\t  ████   ███████  ██████  ██   �
 					sleep(1);
 					printf("\tRESETTING...\n");
 					sleep(1);
-				
-				/*
-				printf("\t__________\n");
-				printf("\t|%d|%d|%d|\n", slotOne, slotTwo, slotThree);
-				printf("\t|__|__|__|\n");
-				*/
 				
 						printf("\n");
 						printf("\t____________________________\n");
@@ -600,12 +527,6 @@ printf("\t  ████   ███████  ██████  ██   �
 		break;
 		
 		case 4:
-			// losyMenu
-			// policko1
-			// policko2
-			// policko3
-			// losGenerator
-			// returnScratch <- fce
 			
 					do{
 					printf("\n");
@@ -736,85 +657,12 @@ printf("\t  ████   ███████  ██████  ██   �
 					system("cls");
 					
 		break;
-/*		
-
-
-					printf("\n\t");
-					/*
-                     printf(",,ggddY""""Ybbgg,,");
-                 printf(",agd""'              `""bg,");
-              printf(",gdP"                       "Ybg,");
-            printf(",dP"                             "Yb,");
-          printf(",dP"         _,,ddP"""Ybb,,_         "Yb,");
-         printf(",8"         ,dP"'         `"Yb,         "8,");
-        printf(",8'        ,d"                 "b,        `8,");
-       printf(",8'        d"                     "b        `8,");
-       printf("d'        d'        ,gPPRg,        `b        `b");
-       printf("8         8        dP'   `Yb        8         8");
-       printf("\t8         8        8)     (8        8         8");
-       printf("8         8        Yb     dP        8         8");
-       printf("8         Y,        "8ggg8"        ,P         8");
-       printf("Y,         Ya                     aP         ,P");
-       printf("`8,         "Ya                 aP"         ,8'");
-        printf("`8,          "Yb,_         _,dP"          ,8'");
-         printf("`8a           `""YbbgggddP""'           a8'");
-          printf("`Yba                                 adP'");
-            printf(""Yba                             adY"");
-              printf("`"Yba,                     ,adP"'");
-                 printf("`"Y8ba,             ,ad8P"'");
-                      printf("``""YYbaaadPP""''");
-
-
-printf("\t_______                      ._.\n");
-printf("\t\   _  \    ______   ______  | |\n");
-printf("\t/  / \  \  /_____/  /_____/  |_|\n");
-printf("\t\  \_/   \ /_____/  /_____/  |-|\n");
-printf("\t \_____  /                   | |\n");
-printf("\t       \/                    |_|\n");
-
-*/		
-
-
-
-
 
 // SPORTOVNI SAZENI 
 
 
 		case 5:
 			
-			// fce pocetGolu
-			// fce tymyGoly
-	
-		/*		int sportMenu; // menu pro sazeni na sport
-			int prvniGolyT1 = 0; // goly tym 1
-			int prvniGolyT2 = 0; // goly tym 2
-			int druhyGolyT1 = 0;
-			int druhyGolyT2 = 0;
-			int tretiGolyT1 = 0;
-			int tretiGolyT2 = 0;
-			int sportSazka; // kolik vsadil uzivatel
-			int sportVyhra; // kolik vyhral uzivatel
-			int hideFirst = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
-			int hideSecond = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
-			int hideThird = 0; // jakmile jednou vsadil na zapas, uz se nebude objevovat v tabulce
-			int vysledekPrvni; // tip uzivatele na zapas 1
-			int vysledekDruhy; // tip uzivatele na zapas 2
-			int vysledekTreti; // tip uzivatele na zapas 3
-			int goalsInMatch; // kolik golu padne v zapase
-			int s; // ridici promenna cyklu
-			int mezivypocetGoly;
-			
-			int presnyPocetGolu1;
-			int presnyPocetGolu2;
-			int presnyPocetGolu3;
-			float sazkaGoly1;
-			float sazkaGoly2;
-			float sazkaGoly3;
-			float vyhraGoly1;
-			float vyhraGoly2;
-			float vyhraGoly3;
-		*/
 			
 			do{
 				printf("\n\tSazeni na sportovni zapasy\n");
@@ -1230,23 +1078,9 @@ printf("\t       \/                    |_|\n");
 			printf("\t");
 			system("PAUSE");
 			system("cls");
-/*			
-		break;
-																									
-																											case 9:
-			
-																											printf("Coming soon...\n");
-			
-																									break;
+		break;	
 		
-																									case 10:
-			
-																											system("credits.bat");
-																											system("popups.vbs");
-					
-																									break;			
-		
-																								*/					
+																												
 		case 7:	
 		printf("\n");
     printf("\t  _______      _      _                                            \n");
@@ -1277,6 +1111,3 @@ printf("\t       \/                    |_|\n");
 	printf("\t");
     system("PAUSE");
 }
-
-
-				
