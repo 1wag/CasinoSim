@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pravidla</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+    }
+
+    h2 {
+      color: #28a745;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    code {
+      background-color: #f8f9fa;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kasino Hry: Pravidla a Technické Detaily</h1>
+
+  <h2>1. Coinflip</h2>
+  <p>
+    Pomocí <code>for loopu</code> se generuje neustále hodnota 0 nebo 1 a inkrementuje se:
+    <br>
+    <strong>0:</strong> heads++;
+    <br>
+    <strong>1:</strong> tails++;
+    <br>
+    Tato hra má 50/50 šanci.
+  </p>
+
+  <h2>2. Blackjack</h2>
+  <p>Coming soon...</p>
+
+  <h2>3. Ruleta Payouts</h2>
+  <ul>
+    <li>Sázka na přesné číslo vyplácí 35:1 (straight-up)</li>
+    <li>Sázka na červenou/černou vyplácí 2:1</li>
+    <li>Sázka na sudé/liché číslo vyplácí 2:1</li>
+    <li>Sázka 1-18/19-36 vyplácí 2:1</li>
+    <li>Sázka na 1st/2nd/3rd twelve vyplácí 3:1</li>
+  </ul>
+
+  <h2>4. Kostky + Payouts</h2>
+  <p>
+    Stejně jako u coinflipu, generuje 1-6 pomocí <code>for loopu</code> a inkrementuje se:
+    <br>
+    1: diceOnes++;
+    <br>
+    2: diceTwos++;
+    <br>
+    3: diceThrees++;
+    <br>
+    4: diceFours++;
+    <br>
+    5: diceFives++;
+    <br>
+    6: diceSixes++;
+  </p>
+
+  <h2>5. Automat + Payouts</h2>
+  <p>
+    Generuje 3 čísla od 1 do 9:
+    <br>
+    - Pokud se vyskytuje alespoň jedna sedmička, payout 1.5x
+    <br>
+    - Pokud se vyskytují dvě sedmičky, payout 8x
+    <br>
+    - Pokud se vyskytují tři sedmičky, jackpot 50x
+    <br>
+    - Pokud se vyskytují dvě stejná čísla, payout 3x
+    <br>
+    - Pokud se vyskytují stejná čísla všude, payout 50x
+  </p>
+</body>
+</html>
